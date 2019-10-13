@@ -1,12 +1,32 @@
-.square {
-    display: inline-block;
-    padding: 4px 8px;
-    color: #2b2b2b;
-    font-size: 14px;
-    background-color: #e9faff;
+.square-list {
+    width: 100%;
 }
 
-.square-fade-in {
-    background-color: #47c7ff;
-    transition: background-color ease-in-out;
+.square {
+    width: 10%;
+    display: inline-block;
+    height: 50px;
+    padding: 4px 8px;
+    border-left: 1px solid white;
+    opacity: 1;
+    color: #2b2b2b;
+    font-size: 14px;
+    background-color: #73abff;
+    transition: 0.5s linear;
+}
+
+.square-blinking {
+    animation: blinking 0.1s infinite;
+}
+
+@keyframes blinking {
+    0% {
+        opacity: 0.8;
+    }
+    50% {
+        opacity: 1;
+    }
+    100% {
+        opacity: 0.8;
+    }
 }

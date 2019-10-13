@@ -1,34 +1,71 @@
-const SET_CURRENT = 'algorithms-drawer/rotate/SET_CURRENT';
-const SET_HIGHLIGHTED = 'algorithms-drawer/rotate/SET_HIGHLIGHTED';
+const MOVE = 'algorithms-drawer/rotate/MOVE';
+const SET_PROCESSING = 'algorithms-drawer/rotate/SET_PROCESSING';
+const RESET_PROCESSING = 'algorithms-drawer/rotate/RESET_PROCESSING';
+const SET_BLINKING = 'algorithms-drawer/rotate/SET_BLINKING';
+const RESET_BLINKING = 'algorithms-drawer/rotate/RESET_BLINKING';
 
 const initialState = {
-  current: -1,
-  isHighLighted: false
+  processing: false,
+  moved: {
+    0: false,
+    1: false,
+    3: false,
+    4: false,
+    5: false,
+    6: false,
+    7: false,
+    8: false,
+    9: false
+  },
+  blinking: false
 };
 
 export const rotateReducer = (state = initialState, action) => {
   switch (action.type) {
-    case SET_CURRENT:
+    case MOVE:
       return {
         ...state,
-        current: action.id
+        moved: { ...state.moved, [action.index]: true }
       };
-    case SET_HIGHLIGHTED:
+    case SET_PROCESSING:
       return {
         ...state,
-        isHighLighted: action.state
+        processing: true
+      };
+    case RESET_PROCESSING:
+      return initialState;
+    case SET_BLINKING:
+      return {
+        ...state,
+        blinking: true
+      };
+    case RESET_BLINKING:
+      return {
+        ...state,
+        blinking: false
       };
     default:
       return state;
   }
 };
 
-export const setCurrent = (id) => ({
-  type: SET_CURRENT,
-  id
+export const move = (index) => ({
+  type: MOVE,
+  index
 });
 
-export const setHighLighted = (state) => ({
-  type: SET_HIGHLIGHTED,
-  state
+export const setProcessing = () => ({
+  type: SET_PROCESSING
+});
+
+export const resetProcessing = () => ({
+  type: RESET_PROCESSING
+});
+
+export const setBlinking = () => ({
+  type: SET_BLINKING
+});
+
+export const resetBlinking = () => ({
+  type: RESET_BLINKING
 });

@@ -1,16 +1,34 @@
-const initialState = [];
-
 const UPDATE = 'algorithms-drawer/array/UPDATE';
+const INVALIDATE = 'algorithms-drawer/array/INVALIDATE';
+
+const initialState = {
+  items: [],
+  didInvalidate: false
+};
 
 export function arrayReducer(state = initialState, action) {
-  if (action.type === UPDATE) {
-    return action.array;
-  } else {
-    return state;
+  switch (action.type) {
+    case UPDATE:
+      return {
+        ...state,
+        items: action.array,
+        didInvalidate: false
+      };
+    case INVALIDATE:
+      return {
+        ...state,
+        didInvalidate: true
+      };
+    default:
+      return state;
   }
 }
 
 export const update = (array) => ({
   type: UPDATE,
   array
+});
+
+export const invalidate = () => ({
+  type: INVALIDATE
 });

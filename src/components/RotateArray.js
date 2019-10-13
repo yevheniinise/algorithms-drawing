@@ -1,31 +1,35 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState, Fragment } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
+import { InputGroup, FormControl, Button } from 'react-bootstrap';
 import cn from 'classnames';
 
 import { update } from '../store/array';
 import { rotate } from '../algorithms/rotate';
 import './RotateArray.css';
 
-const SIZE = 100;
-const SHIFT = 20;
+const SIZE = 10;
 
-const Square = ({ item }) => {
-  const [current, isHighLighted] = useSelector((state) => [state.rotate.current, state.rotate.isHighLighted]);
+const Square = ({ children, index, shift }) => {
+  const [processing, moved, blinking, didInvalidate] = useSelector(
+    (state) => [state.rotate.processing, state.rotate.moved, state.rotate.blinking, state.array.didInvalidate]);
+  const toLeft = SIZE - shift - 1 < index;
+  const styleProps = {
+    transform: `translateX(${(toLeft ? -(SIZE - shift) : shift) * 100}%)`,
+    backgroundColor: processing ? (toLeft ? '#ddebff' : '#eef5ff') : '#73abff',
+    zIndex: toLeft ? 0 : 2
+  };
+  const style = moved[index] ? styleProps : null;
+
   return (
-    <span className={cn('square', current === item && isHighLighted && 'square-fade-in')}>
-      {item}
+    <span style={didInvalidate ? style : null} className={cn('square', blinking && 'square-blinking')}>
+      {children}
     </span>
   );
 };
 
-const SquareList = ({ list }) => (
-  <div className="square-list">
-    {list.map((item) => <Square key={item} item={item} />)}
-  </div>
-);
-
 const RotateArray = () => {
-  const array = useSelector((state) => state.array);
+  const [shift, setShift] = useState(0);
+  const array = useSelector((state) => state.array.items);
   const dispatch = useDispatch();
 
   useEffect(() => {
@@ -34,15 +38,25 @@ const RotateArray = () => {
   }, []);
 
   function handleClick() {
-    rotate(array, SHIFT, dispatch);
+    rotate(array, shift, dispatch);
   }
 
   return (
-    <div>
-      <h3>Rotate Array</h3>
-      <SquareList list={array} />
-      <button onClick={handleClick}>Rotate</button>
-    </div>
+    <Fragment>
+      <InputGroup>
+        <FormControl
+          type="number"
+          value={shift} onChange={(e) => setShift(e.target.value)}
+          placeholder="Indexes to shift"
+        />
+        <InputGroup.Append>
+          <Button variant="outline-secondary" onClick={handleClick}>Rotate</Button>
+        </InputGroup.Append>
+      </InputGroup>
+      <div className="square-list">
+        {array.map((item, index) => <Square key={item} shift={shift} index={index}>{item}</Square>)}
+      </div>
+    </Fragment>
   );
 };
 
