@@ -6,6 +6,7 @@ const RESET_BLINKING = 'algorithms-drawer/rotate/RESET_BLINKING';
 
 const initialState = {
   processing: false,
+  blinking: false,
   moved: {
     0: false,
     1: false,
@@ -16,8 +17,7 @@ const initialState = {
     7: false,
     8: false,
     9: false
-  },
-  blinking: false
+  }
 };
 
 export const rotateReducer = (state = initialState, action) => {

@@ -8,16 +8,25 @@ import { rotate } from '../algorithms/rotate';
 import './RotateArray.css';
 
 const SIZE = 10;
+const COLOR = {
+  0: '#73abff',
+  1: '#ddebff',
+  2: '#eef5ff'
+};
+const getInlineStyles = (processing, shift, current) => {
+  const left = SIZE - shift - 1 < current;
+  return {
+    transform: `translateX(${(left ? -(SIZE - shift) : shift) * 100}%)`,
+    backgroundColor: processing ? (left ? COLOR[1] : COLOR[2]) : COLOR[0],
+    zIndex: left ? 0 : 2
+  }
+};
 
-const Square = ({ children, index, shift }) => {
-  const [processing, moved, blinking, didInvalidate] = useSelector(
-    (state) => [state.rotate.processing, state.rotate.moved, state.rotate.blinking, state.array.didInvalidate]);
-  const toLeft = SIZE - shift - 1 < index;
-  const styleProps = {
-    transform: `translateX(${(toLeft ? -(SIZE - shift) : shift) * 100}%)`,
-    backgroundColor: processing ? (toLeft ? '#ddebff' : '#eef5ff') : '#73abff',
-    zIndex: toLeft ? 0 : 2
-  };
+const Square = ({ children, shift, index }) => {
+  const { processing, blinking, moved } = useSelector((state) => state.rotate);
+  const didInvalidate = useSelector((state) => state.array.didInvalidate);
+
+  const styleProps = getInlineStyles(processing, shift, index);
   const style = moved[index] ? styleProps : null;
 
   return (
