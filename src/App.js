@@ -20,6 +20,7 @@ const App = () => (
       <Switch>
         <Route exact path="/" component={Home} />
         <Route path="/rotate-array" component={RotateArray} />
+        <Route render={() => <p>Not Found</p>} />
       </Switch>
     </div>
   </BrowserRouter>

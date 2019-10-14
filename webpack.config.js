@@ -5,6 +5,18 @@ const app = process.cwd();
 const src = path.resolve(app, 'src');
 const build = path.resolve(app, 'build');
 
+const devMode = process.env.NODE_ENV !== 'production';
+
+const plugins = [];
+
+if (devMode) {
+  plugins.push(
+    new HtmlWebpackPlugin({
+      template: path.resolve(app, 'index.html')
+    })
+  );
+}
+
 module.exports = {
   entry: src + '/index.js',
   output: {
@@ -32,9 +44,5 @@ module.exports = {
       }
     ]
   },
-  plugins: [
-    new HtmlWebpackPlugin({
-      template: path.resolve(app, 'index.html')
-    })
-  ]
+  plugins
 };
