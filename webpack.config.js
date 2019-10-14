@@ -1,33 +1,16 @@
-const path = require('path');
-const HtmlWebpackPlugin = require('html-webpack-plugin');
-
-const app = process.cwd();
-const src = path.resolve(app, 'src');
-const build = path.resolve(app, 'build');
-
 const devMode = process.env.NODE_ENV !== 'production';
-
-const plugins = [];
-
-if (devMode) {
-  plugins.push(
-    new HtmlWebpackPlugin({
-      template: path.resolve(app, 'index.html')
-    })
-  );
-}
+const mode = devMode ? 'development' : 'production';
+const devtool = devMode ? 'eval' : 'source-map';
 
 module.exports = {
-  entry: src + '/index.js',
+  mode,
+  devtool,
+  entry: __dirname + '/client/index.js',
   output: {
     filename: 'bundle.js',
-    path: build,
+    path: __dirname + '/build',
     publicPath: '/'
   },
-  devServer: {
-    historyApiFallback: true
-  },
-  devtool: 'inline-source-map',
   module: {
     rules: [
       {
@@ -43,6 +26,5 @@ module.exports = {
         ]
       }
     ]
-  },
-  plugins
+  }
 };
