@@ -6,7 +6,7 @@ export function rotate(array, k, dispatch) {
   const length = array.length;
   const rate = k <= length / 2 ? length - k : k;
   if (k > length) {
-    k = k & length;
+    k = k % length;
   }
 
   dispatch(invalidate());

@@ -13,6 +13,7 @@ const COLOR = {
   1: '#ddebff',
   2: '#eef5ff'
 };
+
 const getInlineStyles = (processing, shift, current) => {
   const left = SIZE - shift - 1 < current;
   return {
@@ -25,10 +26,8 @@ const getInlineStyles = (processing, shift, current) => {
 const Square = ({ children, shift, index }) => {
   const { processing, blinking, moved } = useSelector((state) => state.rotate);
   const didInvalidate = useSelector((state) => state.array.didInvalidate);
-
   const styleProps = getInlineStyles(processing, shift, index);
   const style = moved[index] ? styleProps : null;
-
   return (
     <span style={didInvalidate ? style : null} className={cn('square', blinking && 'square-blinking')}>
       {children}
@@ -39,6 +38,7 @@ const Square = ({ children, shift, index }) => {
 const RotateArray = () => {
   const [shift, setShift] = useState(0);
   const array = useSelector((state) => state.array.items);
+  const processing = useSelector((state) => state.rotate.processing);
   const dispatch = useDispatch();
 
   useEffect(() => {
@@ -47,6 +47,9 @@ const RotateArray = () => {
   }, []);
 
   function handleClick() {
+    if (shift > SIZE) {
+      setShift(shift % SIZE);
+    }
     rotate(array, shift, dispatch);
   }
 
@@ -57,9 +60,10 @@ const RotateArray = () => {
           type="number"
           value={shift} onChange={(e) => setShift(e.target.value)}
           placeholder="Indexes to shift"
+          disabled={processing}
         />
         <InputGroup.Append>
-          <Button variant="outline-secondary" onClick={handleClick}>Rotate</Button>
+          <Button disabled={processing} variant="outline-secondary" onClick={handleClick}>Rotate</Button>
         </InputGroup.Append>
       </InputGroup>
       <div className="square-list">
